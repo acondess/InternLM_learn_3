@@ -2,6 +2,8 @@
 
 ![banner](image.png)
 
+![alt text](InternLM-C3-S1858.png)
+
 ## [一、入门岛](1.入门岛.md)
 
 ### [1.1 Linux 基础知识](入门岛/1.1%20Linux%20基础知识.md)
