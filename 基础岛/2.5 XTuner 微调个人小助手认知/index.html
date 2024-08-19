@@ -1,0 +1,1655 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../2.4%20InternLM%20%2B%20LlamaIndex%20RAG%20%E5%AE%9E%E8%B7%B5/">
+      
+      
+        <link rel="next" href="../2.6%20OpenCompass%20%E8%AF%84%E6%B5%8B%20InternLM-1.8B%20%E5%AE%9E%E8%B7%B5/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+    
+    
+      
+        <title>2.5 XTuner 微调个人小助手认知 - 第三期书生·浦语实战营学习笔记及作业提交</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#25-xtuner" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="第三期书生·浦语实战营学习笔记及作业提交" class="md-header__button md-logo" aria-label="第三期书生·浦语实战营学习笔记及作业提交" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            第三期书生·浦语实战营学习笔记及作业提交
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.5 XTuner 微调个人小助手认知
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4m0-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  第三期书生·浦语实战营学习笔记及作业提交
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../1.%E5%85%A5%E9%97%A8%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  一、入门岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../2.%E5%9F%BA%E7%A1%80%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  二、基础岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../3.%E8%BF%9B%E9%98%B6%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  三、 进阶岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../4.%E5%AE%9E%E6%88%98%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  四、 实战岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../5.%E5%BD%A9%E8%9B%8B%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  五、 彩蛋岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.1%20Llama3-1/" class="md-tabs__link">
+          
+  
+  4. 实战岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.1%20Linux%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-tabs__link">
+          
+  
+  入门岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../2.1%20%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%A8%E9%93%BE%E8%B7%AF%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB/" class="md-tabs__link">
+          
+  
+  基础岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.1%20%E6%8E%A2%E7%B4%A2%20InternLM%20%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C/" class="md-tabs__link">
+          
+  
+  进阶岛
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="第三期书生·浦语实战营学习笔记及作业提交" class="md-nav__button md-logo" aria-label="第三期书生·浦语实战营学习笔记及作业提交" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    第三期书生·浦语实战营学习笔记及作业提交
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三期书生·浦语实战营学习笔记及作业提交
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.%E5%85%A5%E9%97%A8%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    一、入门岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.%E5%9F%BA%E7%A1%80%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二、基础岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.%E8%BF%9B%E9%98%B6%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    三、 进阶岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%E5%AE%9E%E6%88%98%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    四、 实战岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.%E5%BD%A9%E8%9B%8B%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    五、 彩蛋岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4. 实战岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            4. 实战岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.1%20Llama3-1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 Llama3-1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.2%20MinerU%E6%8F%90%E5%8F%96%E8%AE%BA%E6%96%87%E5%B9%B6RAG%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 MinerU提取论文并RAG化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.3%20AGI%E4%B8%80%E7%AB%99%E5%BC%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.3 AGI一站式解决方案本地部署
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    入门岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            入门岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.1%20Linux%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 Linux 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.2%20Python%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 Python 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.3%20Git%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.3 Git基础
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    基础岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            基础岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.1%20%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%A8%E9%93%BE%E8%B7%AF%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 书生大模型全链路开源体系
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.2%208G%20%E6%98%BE%E5%AD%98%E7%8E%A9%E8%BD%AC%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%20Demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 8G 显存玩转书生大模型 Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.3%20%E6%B5%A6%E8%AF%AD%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.3 浦语提示词工程实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.4%20InternLM%20%2B%20LlamaIndex%20RAG%20%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.4 InternLM + LlamaIndex RAG 实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    2.5 XTuner 微调个人小助手认知
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    2.5 XTuner 微调个人小助手认知
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      一、任务说明
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、任务说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.基础任务
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.进阶任务
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      二、任务提交
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      三、任务步骤
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、任务步骤">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-xtuner" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. XTuner 微调
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.6%20OpenCompass%20%E8%AF%84%E6%B5%8B%20InternLM-1.8B%20%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.6 OpenCompass 评测 InternLM-1.8B 实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    进阶岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            进阶岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.1%20%E6%8E%A2%E7%B4%A2%20InternLM%20%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1探索 InternLM 模型能力边界
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.2%20Lagent%20%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BD%A0%E7%9A%84%20Agent%20%E6%99%BA%E8%83%BD%E4%BD%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 Lagent 自定义你的 Agent 智能体
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.3%20LMDeploy%20%E9%87%8F%E5%8C%96%E9%83%A8%E7%BD%B2%E8%BF%9B%E9%98%B6%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LMDeploy 量化部署进阶实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.4%20InternVL%20%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%BE%AE%E8%B0%83%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 InternVL 多模态模型部署微调实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E9%98%B6%E5%B2%9B/3.5%20%E8%8C%B4%E9%A6%99%E8%B1%86%EF%BC%9A%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94%E5%B7%A5%E5%85%B7/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 茴香豆：企业级知识库问答工具
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="25-xtuner">2.5 XTuner 微调个人小助手认知</h1>
+<h2 id="_1">一、任务说明</h2>
+<blockquote>
+<p>参考：<a href="https://github.com/InternLM/Tutorial/blob/camp3/docs/L1/XTuner/xtuner_finetune_basic.md">XTuner微调前置基础</a></p>
+<p>进阶参考： <a href="https://github.com/InternLM/Tutorial/blob/camp3/docs/L1/XTuner/xtuner_finetune_advance.md">XTuner微调高级进阶</a></p>
+</blockquote>
+<h3 id="1">1.基础任务</h3>
+<ul>
+<li>使用 XTuner 微调 InternLM2-Chat-1.8B 实现自己的小助手认知</li>
+</ul>
+<h3 id="2">2.进阶任务</h3>
+<ul>
+<li>用自己感兴趣的知识对基座模型进行增量预训练微调（选做）</li>
+<li>在资源允许的情况下，尝试实现多卡微调与分布式微调（选做）</li>
+<li>将自我认知的模型上传到 OpenXLab，并将应用部署到 OpenXLab（优秀学员必做）</li>
+</ul>
+<h2 id="_2">二、任务提交</h2>
+<ul>
+<li>
+<p>使用 XTuner 微调 InternLM2-Chat-1.8B</p>
+<p><img alt="命令行运行结果" src="../image-8.png" /></p>
+</li>
+<li>
+<p>将自我认知的模型上传到 OpenXLab，并将应用部署到 OpenXLab</p>
+</li>
+</ul>
+<h2 id="_3">三、任务步骤</h2>
+<h3 id="1-xtuner">1. XTuner 微调</h3>
+<p><a href="https://github.com/InternLM/xtuner/blob/main/README_zh-CN.md">XTuner</a> 一个大语言模型&amp;多模态模型微调工具箱。</p>
+<ol>
+<li>
+<p>打开开发机使用本地VScode远程连接</p>
+<blockquote>
+<p>参考：<a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.1%20Linux%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">入门岛</a></p>
+</blockquote>
+<p><img alt="本地VScode远程连接" src="../%E6%9C%AC%E5%9C%B0VScode%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5.png" /></p>
+</li>
+<li>
+<p>创建及进入虚拟环境</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># studio-conda -t &lt;target-conda-name&gt; -o &lt;origin-conda-name&gt; </span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># 将预设的internlm-base环境拷贝到指定的conda环境，命名为xtuner</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>studio-conda<span class="w"> </span>-t<span class="w"> </span>xtuner<span class="w"> </span>-o<span class="w"> </span>internlm-base
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>conda<span class="w"> </span>activate<span class="w"> </span>xtuner
+</code></pre></div>
+<img alt="xtuner环境" src="../image.png" /></p>
+</li>
+<li>
+<p>安装Xturner</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 创建一个目录，用来存放源代码</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/root/pro
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">cd</span><span class="w"> </span>/root/pro
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>v0.1.23<span class="w">  </span>https://github.com/InternLM/XTuner
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">cd</span><span class="w"> </span>/root/pro/XTuner
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 安装X</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[deepspeed]&#39;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 验证</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>xtuner<span class="w"> </span>version
+</code></pre></div>
+<p><img alt="xtuner 版本" src="../image-1.png" /></p>
+</li>
+<li>
+<p>基座模型 InternLM2-Chat-1.8B
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/root/pro/Laboratory
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ln<span class="w"> </span>-s<span class="w"> </span>/root/share/new_models/Shanghai_AI_Laboratory/internlm2-chat-1_8b<span class="w"> </span>/root/pro/Laboratory/internlm2-chat-1_8b
+</code></pre></div>
+    <img alt="internlm2-chat-1_8b" src="../image-2.png" /></p>
+</li>
+<li>
+<p>生成数据集
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>datas
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>touch<span class="w"> </span>datas/assistant.json
+</code></pre></div></p>
+<p>```python linenums=1
+    # 校本化写入数据
+    import json</p>
+<div class="highlight"><pre><span></span><code># 设置用户的名字
+name = &#39;门客er&#39;
+# 设置需要重复添加的数据次数
+n =  4650
+
+# 初始化数据
+data = [
+    {&quot;conversation&quot;: [{&quot;input&quot;: &quot;请介绍一下你自己&quot;, &quot;output&quot;: &quot;我是{}的小助手，内在是上海AI实验室书生·浦语的1.8B大模型哦&quot;.format(name)}]},
+    {&quot;conversation&quot;: [{&quot;input&quot;: &quot;你在实战营做什么&quot;, &quot;output&quot;: &quot;我在这里帮助{}完成XTuner微调个人小助手的任务&quot;.format(name)}]}
+]
+
+# 通过循环，将初始化的对话数据重复添加到data列表中
+for i in range(n):
+    data.append(data[0])
+    data.append(data[1])
+
+# 将data列表中的数据写入到&#39;datas/assistant.json&#39;文件中
+with open(&#39;datas/assistant.json&#39;, &#39;w&#39;, encoding=&#39;utf-8&#39;) as f:
+    # 使用json.dump方法将数据以JSON格式写入文件
+    # ensure_ascii=False 确保中文字符正常显示
+    # indent=4 使得文件内容格式化，便于阅读
+    json.dump(data, f, ensure_ascii=False, indent=4)
+</code></pre></div>
+<p><code></code> bash linenums=1
+    python xtuner_generate_assistant.py
+```
+<img alt="alt text" src="../image-3.png" /></p>
+</li>
+<li>
+<p>查找配置文件</p>
+<p>XTuner 提供多个开箱即用的配置文件，可以通过以下命令查看。</p>
+<blockquote>
+<p><code>xtuner list-cfg</code>  命令用于列出内置的所有配置文件。参数 <code>-p</code> 或 <code>--pattern</code> 表示模式匹配，后面跟着的内容将会在所有的配置文件里进行模糊匹配搜索，然后返回最有可能得内容。比如我们这里微调的是书生·浦语的模型，我们就可以匹配搜索 internlm2。</p>
+</blockquote>
+<p><code>xtuner list-cfg -p internlm2</code></p>
+<p><details>
+<summary>相关配置文件</summary>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>    ==========================CONFIGS===========================
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    PATTERN: internlm2
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    -------------------------------
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    internlm2_1_8b_full_alpaca_e3
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    internlm2_1_8b_full_custom_pretrain_e1
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    internlm2_1_8b_qlora_alpaca_e3
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    internlm2_20b_full_custom_pretrain_e1
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    internlm2_20b_full_finetune_custom_dataset_e1
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    internlm2_20b_qlora_alpaca_e3
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    internlm2_20b_qlora_arxiv_gentitle_e3
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    internlm2_20b_qlora_code_alpaca_e3
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    internlm2_20b_qlora_colorist_e5
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    internlm2_20b_qlora_lawyer_e3
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    internlm2_20b_qlora_msagent_react_e3_gpu8
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    internlm2_20b_qlora_oasst1_512_e3
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    internlm2_20b_qlora_oasst1_e3
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    internlm2_20b_qlora_sql_e3
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    internlm2_5_chat_7b_full_finetune_custom_dataset_e1
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    internlm2_5_chat_7b_qlora_alpaca_e3
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    internlm2_5_chat_7b_qlora_oasst1_e3
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    internlm2_7b_full_custom_pretrain_e1
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    internlm2_7b_full_finetune_custom_dataset_e1
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    internlm2_7b_full_finetune_custom_dataset_e1_sequence_parallel_4
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    internlm2_7b_qlora_alpaca_e3
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    internlm2_7b_qlora_arxiv_gentitle_e3
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    internlm2_7b_qlora_code_alpaca_e3
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    internlm2_7b_qlora_colorist_e5
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    internlm2_7b_qlora_json_e3
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    internlm2_7b_qlora_lawyer_e3
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    internlm2_7b_qlora_msagent_react_e3_gpu8
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>    internlm2_7b_qlora_oasst1_512_e3
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    internlm2_7b_qlora_oasst1_e3
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    internlm2_7b_qlora_sql_e3
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>    internlm2_7b_w_internevo_dataset
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>    internlm2_7b_w_tokenized_dataset
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>    internlm2_7b_w_untokenized_dataset
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    internlm2_chat_1_8b_dpo_full
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    internlm2_chat_1_8b_dpo_full_varlenattn
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    internlm2_chat_1_8b_dpo_full_varlenattn_jsonl_dataset
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    internlm2_chat_1_8b_full_alpaca_e3
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    internlm2_chat_1_8b_orpo_full
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    internlm2_chat_1_8b_orpo_full_varlenattn
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>    internlm2_chat_1_8b_orpo_full_varlenattn_jsonl_dataset
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    internlm2_chat_1_8b_qlora_alpaca_e3
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>    internlm2_chat_1_8b_qlora_custom_sft_e1
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>    internlm2_chat_1_8b_reward_full_ultrafeedback
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>    internlm2_chat_1_8b_reward_full_varlenattn_jsonl_dataset
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>    internlm2_chat_1_8b_reward_full_varlenattn_ultrafeedback
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>    internlm2_chat_1_8b_reward_qlora_varlenattn_ultrafeedback
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>    internlm2_chat_20b_full_finetune_custom_dataset_e1
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>    internlm2_chat_20b_qlora_alpaca_e3
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>    internlm2_chat_20b_qlora_code_alpaca_e3
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>    internlm2_chat_20b_qlora_custom_sft_e1
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>    internlm2_chat_20b_qlora_lawyer_e3
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>    internlm2_chat_20b_qlora_oasst1_512_e3
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>    internlm2_chat_20b_qlora_oasst1_e3
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>    internlm2_chat_7b_dpo_qlora_varlenattn
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>    internlm2_chat_7b_full_finetune_custom_dataset_e1
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>    internlm2_chat_7b_orpo_qlora_varlenattn_ultrafeedback_e5
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>    internlm2_chat_7b_qlora_alpaca_e3
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>    internlm2_chat_7b_qlora_code_alpaca_e3
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>    internlm2_chat_7b_qlora_custom_sft_e1
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>    internlm2_chat_7b_qlora_lawyer_e3
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>    internlm2_chat_7b_qlora_oasst1_512_e3
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>    internlm2_chat_7b_qlora_oasst1_e3
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>    internvl_v1_5_internlm2_26b_finetune
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a>    internvl_v1_5_internlm2_26b_lora_finetune
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>    internvl_v1_5_internlm2_26b_qlora_finetune
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>    internvl_v1_5_internlm2_2b_finetune
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a>    internvl_v1_5_internlm2_2b_lora_finetune
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a>    internvl_v1_5_internlm2_2b_qlora_finetune
+<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a>    internvl_v2_internlm2_26b_finetune
+<a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a>    internvl_v2_internlm2_26b_lora_finetune
+<a id="__codelineno-5-74" name="__codelineno-5-74" href="#__codelineno-5-74"></a>    internvl_v2_internlm2_26b_qlora_finetune
+<a id="__codelineno-5-75" name="__codelineno-5-75" href="#__codelineno-5-75"></a>    internvl_v2_internlm2_2b_finetune
+<a id="__codelineno-5-76" name="__codelineno-5-76" href="#__codelineno-5-76"></a>    internvl_v2_internlm2_2b_lora_finetune
+<a id="__codelineno-5-77" name="__codelineno-5-77" href="#__codelineno-5-77"></a>    internvl_v2_internlm2_2b_qlora_finetune
+<a id="__codelineno-5-78" name="__codelineno-5-78" href="#__codelineno-5-78"></a>    internvl_v2_internlm2_5_8b_finetune
+<a id="__codelineno-5-79" name="__codelineno-5-79" href="#__codelineno-5-79"></a>    internvl_v2_internlm2_5_8b_lora_finetune
+<a id="__codelineno-5-80" name="__codelineno-5-80" href="#__codelineno-5-80"></a>    internvl_v2_internlm2_5_8b_qlora_finetune
+<a id="__codelineno-5-81" name="__codelineno-5-81" href="#__codelineno-5-81"></a>    llava_internlm2_chat_1_8b_clip_vit_large_p14_336_e1_gpu8_pretrain
+<a id="__codelineno-5-82" name="__codelineno-5-82" href="#__codelineno-5-82"></a>    llava_internlm2_chat_1_8b_qlora_clip_vit_large_p14_336_lora_e1_gpu8_finetune
+<a id="__codelineno-5-83" name="__codelineno-5-83" href="#__codelineno-5-83"></a>    llava_internlm2_chat_20b_clip_vit_large_p14_336_e1_gpu8_finetune
+<a id="__codelineno-5-84" name="__codelineno-5-84" href="#__codelineno-5-84"></a>    llava_internlm2_chat_20b_clip_vit_large_p14_336_e1_gpu8_pretrain
+<a id="__codelineno-5-85" name="__codelineno-5-85" href="#__codelineno-5-85"></a>    llava_internlm2_chat_20b_qlora_clip_vit_large_p14_336_lora_e1_gpu8_finetune
+<a id="__codelineno-5-86" name="__codelineno-5-86" href="#__codelineno-5-86"></a>    llava_internlm2_chat_7b_clip_vit_large_p14_336_e1_gpu8_finetune
+<a id="__codelineno-5-87" name="__codelineno-5-87" href="#__codelineno-5-87"></a>    llava_internlm2_chat_7b_clip_vit_large_p14_336_e1_gpu8_pretrain
+<a id="__codelineno-5-88" name="__codelineno-5-88" href="#__codelineno-5-88"></a>    llava_internlm2_chat_7b_qlora_clip_vit_large_p14_336_lora_e1_gpu8_finetune
+<a id="__codelineno-5-89" name="__codelineno-5-89" href="#__codelineno-5-89"></a>    =============================================================
+</code></pre></div>
+</details  ></p>
+</li>
+<li>
+<p>复制&amp;修改配置文件 internlm2_chat_1_8b_qlora_alpaca_e3</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a> xtuner copy-cfg internlm2_chat_1_8b_qlora_alpaca_e3 .
+</code></pre></div>
+<ul>
+<li>
+<p>修改模型为本地模型路径
+```python linenums=1
+pretrained_model_name_or_path = '/root/pro/Laboratory/internlm2-chat-1_8b'
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>- 修改数据集路径
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>```python linenums=1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>alpaca_en_path = &#39;/root/pro/datas/assistant.json&#39;
+</code></pre></div></p>
+</li>
+<li>
+<p>修改evaluation_inputs
+``` bash linenums=1
+evaluation_inputs = [
+'请介绍一下你自己', 'Please introduce yourself'
+]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>- 修改数据集加载方式
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>```python linenums=1
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>dataset=dict(type=load_dataset, path=&#39;json&#39;, data_files=dict(train=alpaca_en_path)),
+</code></pre></div></p>
+</li>
+<li>
+<p>修改数据对方式</p>
+<ul>
+<li>对话内容已经是 input 和 output 的数据对，所以不需要进行格式转换。</li>
+</ul>
+</li>
+</ul>
+<p><code>python linenums=1
+dataset_map_fn=None,</code></p>
+</li>
+<li>
+<p>启动微调</p>
+<blockquote>
+<p><code>xtuner train</code> 命令用于启动模型微调进程。该命令需要一个参数：<code>CONFIG</code>用于指定微调配置文件。这里我们使用修改好的配置文件 <code>internlm2_chat_1_8b_qlora_alpaca_e3_copy.py</code>。</p>
+<p>训练过程中产生的所有文件，包括日志、配置文件、检查点文件、微调后的模型等，默认保存在 <code>work_dirs</code> 目录下，我们也可以通过添加 <code>--work-dir</code> 指定特定的文件保存位置。</p>
+</blockquote>
+<p><code>bash linenums=1
+xtuner train ./internlm2_chat_1_8b_qlora_alpaca_e3_copy.py</code></p>
+<p><img alt="训练过程" src="../image-4.png" /></p>
+<p><img alt="训练结果" src="../image-5.png" /></p>
+</li>
+<li>
+<p>模型格式转换</p>
+<p>模型转换的本质其实就是将原本使用 Pytorch 训练出来的模型权重文件转换为目前通用的 HuggingFace 格式文件</p>
+<blockquote>
+<p><code>xtuner convert pth_to_hf</code> 命令用于进行模型格式转换。该命令需要三个参数：<code>CONFIG</code> 表示微调的配置文件， <code>PATH_TO_PTH_MODEL</code> 表示微调的模型权重文件路径，即要转换的模型权重， <code>SAVE_PATH_TO_HF_MODEL</code> 表示转换后的 <code>HuggingFace</code> 格式文件的保存路径。</p>
+</blockquote>
+<p><code>bash linenums=1
+pth_file=`ls -t ./work_dirs/internlm2_chat_1_8b_qlora_alpaca_e3_copy/*.pth | head -n 1` &amp;&amp; MKL_SERVICE_FORCE_INTEL=1 MKL_THREADING_LAYER=GNU xtuner convert pth_to_hf ./internlm2_chat_1_8b_qlora_alpaca_e3_copy.py ${pth_file} ./hf</code>
+<img alt="转换成功" src="../image-6.png" /></p>
+</li>
+<li>
+<p>模型合并</p>
+<p>hf 文件夹即为我们平时所理解的所谓 “LoRA 模型文件”</p>
+<blockquote>
+<p>可以简单理解：LoRA 模型文件 = Adapter</p>
+</blockquote>
+<p>对于 LoRA 或者 QLoRA 微调出来的模型其实并不是一个完整的模型，而是一个额外的层（Adapter），训练完的这个层最终还是要与原模型进行合并才能被正常的使用。</p>
+<blockquote>
+<p>对于全量微调的模型（full）其实是不需要进行整合这一步的，因为全量微调修改的是原模型的权重而非微调一个新的 Adapter ，因此是不需要进行模型整合的。</p>
+</blockquote>
+<p>xtuner convert merge命令用于合并模型。该命令需要三个参数：LLM 表示原模型路径，ADAPTER 表示 Adapter 层的路径， SAVE_PATH 表示合并后的模型最终的保存路径。</p>
+<p><code>bash linenums=1
+MKL_SERVICE_FORCE_INTEL=1 MKL_THREADING_LAYER=GNU xtuner convert merge /root/pro/Laboratory/internl m2-chat-1_8b ./hf ./merged --max-shard-size 2GB</code></p>
+<p><img alt="合并完成" src="../image-7.png" /></p>
+</li>
+<li>
+<p>命令行微调模型对话</p>
+<ul>
+<li>
+<p>进入python环境运行
+    <code>bash linenums=1
+    python</code></p>
+</li>
+<li>
+<p>导入库
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">torch</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>定义加载模型方法</p>
+<p><code>python linenums=1
+def load_model(model_path):
+tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).cuda()
+model = model.eval()
+return tokenizer, model</code></p>
+</li>
+<li>
+<p>定义对话方法
+    ```python linenums=1
+    messages = []</p>
+<p>def chat(input_text):
+    length = 0
+    for response, _ in model.stream_chat(tokenizer, input_text, messages):
+        if response is not None:
+            print(response[length:], flush=True, end="")
+            length = len(response)
+```</p>
+</li>
+<li>
+<p>加载微调模型
+    <code>python linenums=1
+    tokenizer, model = load_model("/root/pro/merged")</code></p>
+</li>
+<li>
+<p>运行对话
+    <code>python linenums=1
+    chat("请介绍一下你自己")
+    chat("你在实战营做什么？")</code></p>
+</li>
+<li>
+<p>对话结果</p>
+<p><img alt="命令行运行结果" src="../image-8.png" /></p>
+</li>
+<li>
+<p>释放缓存</p>
+<p>```python linenums=1
+del tokenizer, model</p>
+<p>torch.cuda.empty_cache()
+```</p>
+</li>
+</ul>
+</li>
+<li>
+<p>UI界面部署</p>
+<ul>
+<li>
+<p>安装streamlit
+    <code>bash linenums=1
+    pip install streamlit==1.36.0</code></p>
+</li>
+<li>
+<p>编写streamlit程序</p>
+</li>
+<li>
+<p>运行streamlit程序</p>
+<ul>
+<li>
+<p>报错</p>
+<p><img alt="错误" src="../image-9.png" />
+<a href="https://github.com/InternLM/InternLM/issues/768">issue</a></p>
+<p>GenerationMixin._get_logits_warper() missing 1 required positional argument: 'device'</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2024 <a href="https://github.com/acondess" target="_blank" rel="noopener">acondess</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://acondess.github.io/InternLM_learn_3/" target="_blank" rel="noopener" title="acondess.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs.sticky", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.sections", "toc.integrate", "toc.sections", "toc.follow", "toc.numbers", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "footer"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1617 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../3.2%20Lagent%20%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BD%A0%E7%9A%84%20Agent%20%E6%99%BA%E8%83%BD%E4%BD%93/">
+      
+      
+        <link rel="next" href="../3.4%20InternVL%20%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%BE%AE%E8%B0%83%E5%AE%9E%E8%B7%B5/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+    
+    
+      
+        <title>3.3 LMDeploy 量化部署进阶实践 - 第三期书生·浦语实战营学习笔记及作业提交</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#33-lmdeploy" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="第三期书生·浦语实战营学习笔记及作业提交" class="md-header__button md-logo" aria-label="第三期书生·浦语实战营学习笔记及作业提交" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            第三期书生·浦语实战营学习笔记及作业提交
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3.3 LMDeploy 量化部署进阶实践
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4m0-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  第三期书生·浦语实战营学习笔记及作业提交
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../1.%E5%85%A5%E9%97%A8%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  一、入门岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../2.%E5%9F%BA%E7%A1%80%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  二、基础岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../3.%E8%BF%9B%E9%98%B6%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  三、 进阶岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../4.%E5%AE%9E%E6%88%98%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  四、 实战岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../5.%E5%BD%A9%E8%9B%8B%E5%B2%9B/" class="md-tabs__link">
+        
+  
+    
+  
+  五、 彩蛋岛
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.1%20Llama3-1/" class="md-tabs__link">
+          
+  
+  4. 实战岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.1%20Linux%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-tabs__link">
+          
+  
+  入门岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.1%20%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%A8%E9%93%BE%E8%B7%AF%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB/" class="md-tabs__link">
+          
+  
+  基础岛
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../3.1%20%E6%8E%A2%E7%B4%A2%20InternLM%20%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C/" class="md-tabs__link">
+          
+  
+  进阶岛
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="第三期书生·浦语实战营学习笔记及作业提交" class="md-nav__button md-logo" aria-label="第三期书生·浦语实战营学习笔记及作业提交" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    第三期书生·浦语实战营学习笔记及作业提交
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三期书生·浦语实战营学习笔记及作业提交
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.%E5%85%A5%E9%97%A8%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    一、入门岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.%E5%9F%BA%E7%A1%80%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二、基础岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.%E8%BF%9B%E9%98%B6%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    三、 进阶岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%E5%AE%9E%E6%88%98%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    四、 实战岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.%E5%BD%A9%E8%9B%8B%E5%B2%9B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    五、 彩蛋岛
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4. 实战岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            4. 实战岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.1%20Llama3-1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 Llama3-1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.2%20MinerU%E6%8F%90%E5%8F%96%E8%AE%BA%E6%96%87%E5%B9%B6RAG%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 MinerU提取论文并RAG化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.%20%E5%AE%9E%E6%88%98%E5%B2%9B/4.3%20AGI%E4%B8%80%E7%AB%99%E5%BC%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.3 AGI一站式解决方案本地部署
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    入门岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            入门岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.1%20Linux%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 Linux 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.2%20Python%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 Python 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%85%A5%E9%97%A8%E5%B2%9B/1.3%20Git%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.3 Git基础
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    基础岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            基础岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.1%20%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%A8%E9%93%BE%E8%B7%AF%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 书生大模型全链路开源体系
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.2%208G%20%E6%98%BE%E5%AD%98%E7%8E%A9%E8%BD%AC%E4%B9%A6%E7%94%9F%E5%A4%A7%E6%A8%A1%E5%9E%8B%20Demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 8G 显存玩转书生大模型 Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.3%20%E6%B5%A6%E8%AF%AD%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.3 浦语提示词工程实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.4%20InternLM%20%2B%20LlamaIndex%20RAG%20%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.4 InternLM + LlamaIndex RAG 实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.5%20XTuner%20%E5%BE%AE%E8%B0%83%E4%B8%AA%E4%BA%BA%E5%B0%8F%E5%8A%A9%E6%89%8B%E8%AE%A4%E7%9F%A5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.5 XTuner 微调个人小助手认知
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%9F%BA%E7%A1%80%E5%B2%9B/2.6%20OpenCompass%20%E8%AF%84%E6%B5%8B%20InternLM-1.8B%20%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.6 OpenCompass 评测 InternLM-1.8B 实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    进阶岛
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            进阶岛
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3.1%20%E6%8E%A2%E7%B4%A2%20InternLM%20%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1探索 InternLM 模型能力边界
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3.2%20Lagent%20%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BD%A0%E7%9A%84%20Agent%20%E6%99%BA%E8%83%BD%E4%BD%93/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 Lagent 自定义你的 Agent 智能体
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    3.3 LMDeploy 量化部署进阶实践
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LMDeploy 量化部署进阶实践
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      一、任务说明
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、任务说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.基础任务
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.进阶任务
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      二、任务提交
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、任务提交">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      基础任务
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      进阶任务
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      三、复现步骤
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、复现步骤">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-lmdeploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 LMDeploy环境
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-lmdeploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 LMDeploy量化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 LMDeploy量化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321-kv-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.1 kv cache量化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#322" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.2 权重量化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 函数调用（大模型应用）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3.4%20InternVL%20%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%BE%AE%E8%B0%83%E5%AE%9E%E8%B7%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 InternVL 多模态模型部署微调实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3.5%20%E8%8C%B4%E9%A6%99%E8%B1%86%EF%BC%9A%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94%E5%B7%A5%E5%85%B7/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 茴香豆：企业级知识库问答工具
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="33-lmdeploy">3.3 LMDeploy 量化部署进阶实践</h1>
+<p><img alt="alt text" src="../image-1.png" /></p>
+<h2 id="_1">一、任务说明</h2>
+<h3 id="1">1.基础任务</h3>
+<ul>
+<li>使用结合W4A16量化与kv cache量化的internlm2_5-7b-chat模型封装本地API并与大模型进行一次对话，作业截图需包括显存占用情况与大模型回复，参考4.1 API开发(优秀学员必做)</li>
+</ul>
+<p><img alt="alt text" src="../image-18.png" /></p>
+<ul>
+<li>使用Function call功能让大模型完成一次简单的"加"与"乘"函数调用，作业截图需包括大模型回复的工具调用情况，参考4.2 Function call(选做)</li>
+</ul>
+<p><img alt="alt text" src="../image-23.png" /></p>
+<h3 id="2">2.进阶任务</h3>
+<h2 id="_2">二、任务提交</h2>
+<h3 id="_3">基础任务</h3>
+<ul>
+<li>
+<p>W4A16量化与kv cache量化的internlm2_5-7b-chat显存占用情况与大模型回复</p>
+</li>
+<li>
+<p>Function call功能让大模型完成一次简单的"加"与"乘"函数调用,大模型回复的工具调用情况</p>
+</li>
+</ul>
+<h3 id="_4">进阶任务</h3>
+<h2 id="_5">三、复现步骤</h2>
+<ol>
+<li>LMDeploy环境</li>
+<li>LMDeploy与InternLM2.5</li>
+<li>LMDeploy与InternVL2</li>
+<li>LMDeploy的api服务与Function call</li>
+</ol>
+<h3 id="31-lmdeploy">3.1 LMDeploy环境</h3>
+<ul>
+<li>开发及设置</li>
+</ul>
+<p>30%A100*1(24GB显存容量)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>lmdeploy<span class="w">  </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span>-y
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>conda<span class="w"> </span>install<span class="w"> </span><span class="nv">pytorch</span><span class="o">==</span><span class="m">2</span>.1.2<span class="w"> </span><span class="nv">torchvision</span><span class="o">==</span><span class="m">0</span>.16.2<span class="w"> </span><span class="nv">torchaudio</span><span class="o">==</span><span class="m">2</span>.1.2<span class="w"> </span>pytorch-cuda<span class="o">=</span><span class="m">12</span>.1<span class="w"> </span>-c<span class="w"> </span>pytorch<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>-y
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">timm</span><span class="o">==</span><span class="m">1</span>.0.8<span class="w"> </span><span class="nv">openai</span><span class="o">==</span><span class="m">1</span>.40.3<span class="w"> </span>lmdeploy<span class="o">[</span>all<span class="o">]==</span><span class="m">0</span>.5.3
+</code></pre></div>
+<ul>
+<li>获取internlm2_5-7b-chat和InternVL2-26B模型</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mkdir<span class="w"> </span>/root/models
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ln<span class="w"> </span>-s<span class="w"> </span>/root/share/new_models//Shanghai_AI_Laboratory/internlm2_5-7b-chat<span class="w"> </span>/root/models
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ln<span class="w"> </span>-s<span class="w"> </span>/root/share/new_models/OpenGVLab/InternVL2-26B<span class="w"> </span>/root/models
+</code></pre></div>
+<p><img alt="alt text" src="../image-9.png" /></p>
+<ul>
+<li>测试模型</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>lmdeploy<span class="w"> </span>chat<span class="w"> </span>/root/models/internlm2_5-7b-chat
+</code></pre></div>
+<p><img alt="alt text" src="../image-10.png" /></p>
+<p><img alt="alt text" src="../image-11.png" /></p>
+<p><img alt="alt text" src="../image-12.png" /></p>
+<ul>
+<li>服务部署</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>lmdeploy<span class="w"> </span>serve<span class="w"> </span>api_server<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>/root/models/internlm2_5-7b-chat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--model-format<span class="w"> </span>hf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--quant-policy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--server-name<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>--server-port<span class="w"> </span><span class="m">23333</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--tp<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<ul>
+<li>另起一个终端服务访问（CLI(“命令行界面” Command Line Interface的缩写)-client）</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>lmdeploy<span class="w"> </span>serve<span class="w"> </span>api_client<span class="w"> </span>http://localhost:23333
+</code></pre></div>
+<p><img alt="alt text" src="../image-13.png" /></p>
+<p><img alt="alt text" src="../image-14.png" /></p>
+<ul>
+<li>基于api服务调用，启动gradio界面(另起终端)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>lmdeploy<span class="w"> </span>serve<span class="w"> </span>gradio<span class="w"> </span>http://localhost:23333<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--server-name<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--server-port<span class="w"> </span><span class="m">6006</span>
+</code></pre></div>
+<p><img alt="alt text" src="../image-15.png" /></p>
+<p><img alt="alt text" src="../image-16.png" /></p>
+<h3 id="32-lmdeploy">3.2 LMDeploy量化</h3>
+<p>LMDeploy 提供了权重量化和 k/v cache两种策略。</p>
+<h4 id="321-kv-cache">3.2.1 kv cache量化</h4>
+<p>kv cache是一种缓存技术，通过存储键值对的形式来复用计算结果，以达到提高性能和降低内存消耗的目的。</p>
+<p>在大规模训练和推理中，kv cache可以显著减少重复计算量，从而提升模型的推理速度。理想情况下，kv cache全部存储于显存，以加快访存速度。</p>
+<p>模型在运行时，占用的显存可大致分为三部分：模型参数本身占用的显存、kv cache占用的显存，以及中间运算结果占用的显存。</p>
+<p>自 v0.4.0 起，LMDeploy 支持在线 kv cache int4/int8 量化，量化方式为 per-head per-token 的非对称量化。此外，通过 LMDeploy 应用 kv 量化非常简单，只需要设定 quant_policy 和cache-max-entry-count参数。</p>
+<p>目前，LMDeploy 规定 qant_policy=4 表示 kv int4 量化，quant_policy=8 表示 kv int8 量化。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lmdeploy<span class="w"> </span>serve<span class="w"> </span>api_server<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>/root/models/internlm2_5-7b-chat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--model-format<span class="w"> </span>hf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--quant-policy<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--cache-max-entry-count<span class="w"> </span><span class="m">0</span>.4<span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--server-name<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--server-port<span class="w"> </span><span class="m">23333</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--tp<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p><img alt="alt text" src="../image-17.png" /></p>
+<h4 id="322">3.2.2 权重量化</h4>
+<p>W4：这通常表示权重量化为4位整数（int4）。这意味着模型中的权重参数将从它们原始的浮点表示（例如FP32、BF16或FP16，Internlm2.5精度为BF16）转换为4位的整数表示。这样做可以显著减少模型的大小。</p>
+<p>A16：这表示激活（或输入/输出）仍然保持在16位浮点数（例如FP16或BF16）。激活是在神经网络中传播的数据，通常在每层运算之后产生。</p>
+<p>因此，W4A16的量化配置意味着：
+- 权重被量化为4位整数。
+- 激活保持为16位浮点数。</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>lmdeploy<span class="w"> </span>lite<span class="w"> </span>auto_awq<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">   </span>/root/models/internlm2_5-7b-chat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--calib-dataset<span class="w"> </span><span class="s1">&#39;ptb&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--calib-samples<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--calib-seqlen<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--w-bits<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--w-group-size<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--batch-size<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--search-scale<span class="w"> </span>False<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--work-dir<span class="w"> </span>/root/models/internlm2_5-7b-chat-w4a16-4bit
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="sb">```</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>-<span class="w"> </span>lmdeploy<span class="w"> </span>lite<span class="w"> </span>auto_awq:<span class="w"> </span>lite这是LMDeploy的命令，用于启动量化过程，而auto_awq代表自动权重量化（auto-weight-quantization）。
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>-<span class="w"> </span>/root/models/internlm2_5-7b-chat:<span class="w"> </span>模型文件的路径。
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>-<span class="w"> </span>--calib-dataset<span class="w"> </span><span class="s1">&#39;ptb&#39;</span>:<span class="w"> </span>这个参数指定了一个校准数据集，这里使用的是’ptb’（Penn<span class="w"> </span>Treebank，一个常用的语言模型数据集）。
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>-<span class="w"> </span>--calib-samples<span class="w"> </span><span class="m">128</span>:<span class="w"> </span>这指定了用于校准的样本数量—128个样本
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>-<span class="w"> </span>--calib-seqlen<span class="w"> </span><span class="m">2048</span>:<span class="w"> </span>这指定了校准过程中使用的序列长度—2048
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>-<span class="w"> </span>--w-bits<span class="w"> </span><span class="m">4</span>:<span class="w"> </span>这表示权重（weights）的位数将被量化为4位。
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>-<span class="w"> </span>--work-dir<span class="w"> </span>/root/models/internlm2_5-7b-chat-w4a16-4bit:<span class="w"> </span>这是工作目录的路径，用于存储量化后的模型和中间结果。
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>!<span class="o">[</span>alt<span class="w"> </span>text<span class="o">](</span>image-19.png<span class="o">)</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>-<span class="w"> </span>模型大小查看
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="sb">```</span>shell
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>du<span class="w"> </span>-sh<span class="w"> </span>/root/models/*
+</code></pre></div>
+<img alt="alt text" src="../image-20.png" /></p>
+<p>其余文件夹都是以软链接的形式存在的，不占用空间，故显示为0</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/root/share/new_models/Shanghai_AI_Laboratory/*
+</code></pre></div>
+<img alt="alt text" src="../image-21.png" /></p>
+<h3 id="33">3.3 函数调用（大模型应用）</h3>
+<p>关于Function call，即函数调用功能，它允许开发者在调用模型时，详细说明函数的作用，并使模型能够智能地根据用户的提问来输入参数并执行函数。完成调用后，模型会将函数的输出结果作为回答用户问题的依据。</p>
+<ul>
+<li>部署大模型服务</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>lmdeploy
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>lmdeploy<span class="w"> </span>serve<span class="w"> </span>api_server<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>/root/models/internlm2_5-7b-chat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>--model-format<span class="w"> </span>hf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>--quant-policy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>--server-name<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>--server-port<span class="w"> </span><span class="m">23333</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span>--tp<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<ul>
+<li>创建函数文件internlm2_5_func.py</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>touch<span class="w"> </span>/root/internlm2_5_func.py
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="n">tools</span> <span class="o">=</span> <span class="p">[{</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;add&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Compute the sum of two numbers&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>        <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>                <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A number&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>                <span class="p">},</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>                <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A number&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>                <span class="p">},</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>            <span class="p">},</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>        <span class="p">},</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>    <span class="p">}</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="p">},</span> <span class="p">{</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>    <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mul&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Calculate the product of two numbers&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>        <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>                <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A number&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>                <span class="p">},</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>                <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A number&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>                <span class="p">},</span>
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>            <span class="p">},</span>
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span>
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>        <span class="p">},</span>
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>    <span class="p">}</span>
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a><span class="p">}]</span>
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="s1">&#39;Compute (3+5)*2&#39;</span><span class="p">}]</span>
+<a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>
+<a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;http://0.0.0.0:23333/v1&#39;</span><span class="p">)</span>
+<a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a><span class="n">model_name</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+<a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-11-58" name="__codelineno-11-58" href="#__codelineno-11-58"></a>    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+<a id="__codelineno-11-59" name="__codelineno-11-59" href="#__codelineno-11-59"></a>    <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+<a id="__codelineno-11-60" name="__codelineno-11-60" href="#__codelineno-11-60"></a>    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-11-61" name="__codelineno-11-61" href="#__codelineno-11-61"></a>    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-11-62" name="__codelineno-11-62" href="#__codelineno-11-62"></a>    <span class="n">stream</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-11-63" name="__codelineno-11-63" href="#__codelineno-11-63"></a>    <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">)</span>
+<a id="__codelineno-11-64" name="__codelineno-11-64" href="#__codelineno-11-64"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<a id="__codelineno-11-65" name="__codelineno-11-65" href="#__codelineno-11-65"></a><span class="n">func1_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+<a id="__codelineno-11-66" name="__codelineno-11-66" href="#__codelineno-11-66"></a><span class="n">func1_args</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span>
+<a id="__codelineno-11-67" name="__codelineno-11-67" href="#__codelineno-11-67"></a><span class="n">func1_out</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func1_name</span><span class="si">}</span><span class="s1">(**</span><span class="si">{</span><span class="n">func1_args</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<a id="__codelineno-11-68" name="__codelineno-11-68" href="#__codelineno-11-68"></a><span class="nb">print</span><span class="p">(</span><span class="n">func1_out</span><span class="p">)</span>
+<a id="__codelineno-11-69" name="__codelineno-11-69" href="#__codelineno-11-69"></a>
+<a id="__codelineno-11-70" name="__codelineno-11-70" href="#__codelineno-11-70"></a><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-11-71" name="__codelineno-11-71" href="#__codelineno-11-71"></a>    <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-72" name="__codelineno-11-72" href="#__codelineno-11-72"></a>    <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+<a id="__codelineno-11-73" name="__codelineno-11-73" href="#__codelineno-11-73"></a><span class="p">})</span>
+<a id="__codelineno-11-74" name="__codelineno-11-74" href="#__codelineno-11-74"></a><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-11-75" name="__codelineno-11-75" href="#__codelineno-11-75"></a>    <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;environment&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-76" name="__codelineno-11-76" href="#__codelineno-11-76"></a>    <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;3+5=</span><span class="si">{</span><span class="n">func1_out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-77" name="__codelineno-11-77" href="#__codelineno-11-77"></a>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;plugin&#39;</span>
+<a id="__codelineno-11-78" name="__codelineno-11-78" href="#__codelineno-11-78"></a><span class="p">})</span>
+<a id="__codelineno-11-79" name="__codelineno-11-79" href="#__codelineno-11-79"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-11-80" name="__codelineno-11-80" href="#__codelineno-11-80"></a>    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+<a id="__codelineno-11-81" name="__codelineno-11-81" href="#__codelineno-11-81"></a>    <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+<a id="__codelineno-11-82" name="__codelineno-11-82" href="#__codelineno-11-82"></a>    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-11-83" name="__codelineno-11-83" href="#__codelineno-11-83"></a>    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-11-84" name="__codelineno-11-84" href="#__codelineno-11-84"></a>    <span class="n">stream</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-11-85" name="__codelineno-11-85" href="#__codelineno-11-85"></a>    <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">)</span>
+<a id="__codelineno-11-86" name="__codelineno-11-86" href="#__codelineno-11-86"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<a id="__codelineno-11-87" name="__codelineno-11-87" href="#__codelineno-11-87"></a><span class="n">func2_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+<a id="__codelineno-11-88" name="__codelineno-11-88" href="#__codelineno-11-88"></a><span class="n">func2_args</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span>
+<a id="__codelineno-11-89" name="__codelineno-11-89" href="#__codelineno-11-89"></a><span class="n">func2_out</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func2_name</span><span class="si">}</span><span class="s1">(**</span><span class="si">{</span><span class="n">func2_args</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<a id="__codelineno-11-90" name="__codelineno-11-90" href="#__codelineno-11-90"></a><span class="nb">print</span><span class="p">(</span><span class="n">func2_out</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>运行internlm2_5_func.py</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>/root/internlm2_5_func.py
+</code></pre></div>
+<img alt="alt text" src="../image-22.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2024 <a href="https://github.com/acondess" target="_blank" rel="noopener">acondess</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://acondess.github.io/InternLM_learn_3/" target="_blank" rel="noopener" title="acondess.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs.sticky", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.sections", "toc.integrate", "toc.sections", "toc.follow", "toc.numbers", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "footer"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>
